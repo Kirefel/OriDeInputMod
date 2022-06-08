@@ -9,6 +9,41 @@ namespace OriDeInputMod
 {
     public class ControllerBindControl : MonoBehaviour
     {
+        private const string DefaultTooltip = "[Accept] to change bind    <icon>k</>+[Accept] to append bind";
+
+        private Func<ControllerRebinds.ControllerButton[]> GetKeys;
+
+        private Action<ControllerRebinds.ControllerButton[]> SetKeys;
+
+        private bool editing;
+
+        private MessageBox messageBox;
+
+        private readonly List<ControllerRebinds.ControllerButton> currentKeys = new List<ControllerRebinds.ControllerButton>();
+
+        private int exit;
+
+        private bool[] buttonsPressed;
+
+        private XboxControllerInput.Button[] allButtons;
+
+        private CustomOptionsScreen owner;
+
+        private BasicMessageProvider tooltipProvider;
+
+        public void Init(Func<ControllerRebinds.ControllerButton[]> getKeys, Action<ControllerRebinds.ControllerButton[]> setKeys, CustomOptionsScreen owner)
+        {
+            this.owner = owner;
+            GetKeys = getKeys;
+            SetKeys = setKeys;
+            messageBox.SetMessage(new MessageDescriptor(KeyBindingToString(getKeys())));
+            CleverMenuItemTooltip component = base.GetComponent<CleverMenuItemTooltip>();
+            tooltipProvider = ScriptableObject.CreateInstance<BasicMessageProvider>();
+            tooltipProvider.SetMessage(DefaultTooltip);
+            component.Tooltip = tooltipProvider;
+            owner.tooltipController.UpdateTooltip();
+        }
+
         private void Awake()
         {
             messageBox = base.transform.Find("text/stateText").GetComponent<MessageBox>();
@@ -16,7 +51,11 @@ namespace OriDeInputMod
 
         public void BeginEditing()
         {
-            currentKeys.Clear();
+            bool appendMode = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
+
+            if (!appendMode)
+                currentKeys.Clear();
+
             UpdateMessageBox();
             SuspensionManager.SuspendAll();
             editing = true;
@@ -27,7 +66,12 @@ namespace OriDeInputMod
             {
                 buttonsPressed[i] = true;
             }
-            tooltipProvider.SetMessage("<icon>g</> to finish editing");
+
+            if (appendMode)
+                tooltipProvider.SetMessage("Press any button to append bind");
+            else
+                tooltipProvider.SetMessage("Press any button to change bind");
+
             owner.tooltipController.UpdateTooltip();
         }
 
@@ -42,26 +86,27 @@ namespace OriDeInputMod
                 exit++;
                 return;
             }
-            if (Input.GetKeyDown(KeyCode.Escape) || (WasPressed(XboxControllerInput.Button.Start) && currentKeys.Count > 0))
+
+            ControllerRebinds.ControllerButton? pressedButtonAsBind = GetPressedButtonAsBind();
+            if (pressedButtonAsBind != null)
             {
+                if (!currentKeys.Contains(pressedButtonAsBind.Value))
+                    currentKeys.Add(pressedButtonAsBind.Value);
+
+                UpdateMessageBox();
+
                 editing = false;
                 SuspensionManager.ResumeAll();
                 SetKeys(currentKeys.ToArray());
                 ControllerRebinds.WriteControllerRebindSettings();
                 PlayerInput.Instance.RefreshControlScheme();
-                tooltipProvider.SetMessage("<icon>e</> to change binds");
+                tooltipProvider.SetMessage(DefaultTooltip);
                 owner.tooltipController.UpdateTooltip();
-                return;
             }
-            ControllerRebinds.ControllerButton? pressedButtonAsBind = GetPressedButtonAsBind();
-            if (pressedButtonAsBind != null && !currentKeys.Contains(pressedButtonAsBind.Value))
-            {
-                currentKeys.Add(pressedButtonAsBind.Value);
-                UpdateMessageBox();
-            }
+
             foreach (XboxControllerInput.Button button in allButtons)
             {
-                buttonsPressed[(int)button] = XboxControllerInput.GetButton(button, -1);
+                buttonsPressed[(int)button] = XboxControllerInput.GetButton(button);
             }
         }
 
@@ -81,12 +126,6 @@ namespace OriDeInputMod
                 flag = false;
             }
             return text;
-        }
-
-        private void Reset()
-        {
-            messageBox.SetMessage(new MessageDescriptor(KeyBindingToString(GetKeys())));
-            editing = false;
         }
 
         private bool WasPressed(XboxControllerInput.Button button)
@@ -149,38 +188,5 @@ namespace OriDeInputMod
                 return ControllerRebinds.ControllerButton.DDown;
             return null;
         }
-
-        public void Init(Func<ControllerRebinds.ControllerButton[]> getKeys, Action<ControllerRebinds.ControllerButton[]> setKeys, CustomOptionsScreen owner)
-        {
-            this.owner = owner;
-            GetKeys = getKeys;
-            SetKeys = setKeys;
-            messageBox.SetMessage(new MessageDescriptor(KeyBindingToString(getKeys())));
-            CleverMenuItemTooltip component = base.GetComponent<CleverMenuItemTooltip>();
-            tooltipProvider = ScriptableObject.CreateInstance<BasicMessageProvider>();
-            tooltipProvider.SetMessage("<icon>e</> to change binds");
-            component.Tooltip = tooltipProvider;
-            owner.tooltipController.UpdateTooltip();
-        }
-
-        private Func<ControllerRebinds.ControllerButton[]> GetKeys;
-
-        private Action<ControllerRebinds.ControllerButton[]> SetKeys;
-
-        private bool editing;
-
-        private MessageBox messageBox;
-
-        private readonly List<ControllerRebinds.ControllerButton> currentKeys = new List<ControllerRebinds.ControllerButton>();
-
-        private int exit;
-
-        private bool[] buttonsPressed;
-
-        private XboxControllerInput.Button[] allButtons;
-
-        private CustomOptionsScreen owner;
-
-        private BasicMessageProvider tooltipProvider;
     }
 }

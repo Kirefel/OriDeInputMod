@@ -59,6 +59,21 @@ namespace OriDeInputMod
                 case ControllerRebinds.ControllerButton.LS: return "<icon>J</>";
                 case ControllerRebinds.ControllerButton.Back: return "<icon>l</>";
                 case ControllerRebinds.ControllerButton.Start: return "<icon>g</>";
+
+                case ControllerRebinds.ControllerButton.DLeft: return "DPad <icon>c</>";
+                case ControllerRebinds.ControllerButton.DRight: return "DPad <icon>d</>";
+                case ControllerRebinds.ControllerButton.DUp: return "DPad <icon>a</>";
+                case ControllerRebinds.ControllerButton.DDown: return "DPad <icon>b</>";
+
+                case ControllerRebinds.ControllerButton.LLeft: return "LS <icon>c</>";
+                case ControllerRebinds.ControllerButton.LRight: return "LS<icon>d</>";
+                case ControllerRebinds.ControllerButton.LUp: return "LS<icon>a</>";
+                case ControllerRebinds.ControllerButton.LDown: return "LS<icon>b</>";
+
+                case ControllerRebinds.ControllerButton.RLeft: return "RS <icon>c</>";
+                case ControllerRebinds.ControllerButton.RRight: return "RS <icon>d</>";
+                case ControllerRebinds.ControllerButton.RUp: return "RS <icon>a</>";
+                case ControllerRebinds.ControllerButton.RDown: return "RS<icon>b</>";
                 default: return button.ToString();
             }
         }
