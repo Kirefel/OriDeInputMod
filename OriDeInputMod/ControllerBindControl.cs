@@ -11,7 +11,6 @@ namespace OriDeInputMod
     {
         private const string DefaultTooltip = "[Accept] to change bind    <icon>k</>+[Accept] to append bind";
 
-        private Func<ControllerRebinds.ControllerButton[]> GetKeys;
 
         private Action<ControllerRebinds.ControllerButton[]> SetKeys;
 
@@ -34,7 +33,6 @@ namespace OriDeInputMod
         public void Init(Func<ControllerRebinds.ControllerButton[]> getKeys, Action<ControllerRebinds.ControllerButton[]> setKeys, CustomOptionsScreen owner)
         {
             this.owner = owner;
-            GetKeys = getKeys;
             SetKeys = setKeys;
             messageBox.SetMessage(new MessageDescriptor(KeyBindingToString(getKeys())));
             CleverMenuItemTooltip component = base.GetComponent<CleverMenuItemTooltip>();
