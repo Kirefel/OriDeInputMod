@@ -34,7 +34,8 @@ namespace OriDeInputMod
         {
             this.owner = owner;
             SetKeys = setKeys;
-            messageBox.SetMessage(new MessageDescriptor(KeyBindingToString(getKeys())));
+            currentKeys.AddRange(getKeys());
+            messageBox.SetMessage(new MessageDescriptor(KeyBindingToString(currentKeys.ToArray())));
             CleverMenuItemTooltip component = base.GetComponent<CleverMenuItemTooltip>();
             tooltipProvider = ScriptableObject.CreateInstance<BasicMessageProvider>();
             tooltipProvider.SetMessage(DefaultTooltip);
@@ -85,27 +86,35 @@ namespace OriDeInputMod
                 return;
             }
 
+            if (Input.GetKeyDown(KeyCode.Escape))
+                FinishEditing();
+
             ControllerRebinds.ControllerButton? pressedButtonAsBind = GetPressedButtonAsBind();
             if (pressedButtonAsBind != null)
             {
                 if (!currentKeys.Contains(pressedButtonAsBind.Value))
                     currentKeys.Add(pressedButtonAsBind.Value);
 
-                UpdateMessageBox();
-
-                editing = false;
-                SuspensionManager.ResumeAll();
-                SetKeys(currentKeys.ToArray());
-                ControllerRebinds.WriteControllerRebindSettings();
-                PlayerInput.Instance.RefreshControlScheme();
-                tooltipProvider.SetMessage(DefaultTooltip);
-                owner.tooltipController.UpdateTooltip();
+                FinishEditing();
             }
 
             foreach (XboxControllerInput.Button button in allButtons)
             {
                 buttonsPressed[(int)button] = XboxControllerInput.GetButton(button);
             }
+        }
+
+        private void FinishEditing()
+        {
+            UpdateMessageBox();
+
+            editing = false;
+            SuspensionManager.ResumeAll();
+            SetKeys(currentKeys.ToArray());
+            ControllerRebinds.WriteControllerRebindSettings();
+            PlayerInput.Instance.RefreshControlScheme();
+            tooltipProvider.SetMessage(DefaultTooltip);
+            owner.tooltipController.UpdateTooltip();
         }
 
         public void UpdateMessageBox()

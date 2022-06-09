@@ -39,6 +39,7 @@ namespace OriDeInputMod
             // Lower tooltip so it fits under the options
             var pos = tooltipController.transform.position;
             pos.y = -3.38f;
+            pos.x = -pos.x;
             tooltipController.transform.position = pos;
             Destroy(transform.FindChild("highlightFade/legend").gameObject);
 

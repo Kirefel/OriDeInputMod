@@ -21,7 +21,7 @@ namespace OriDeInputMod
             SuspensionManager.SuspendAll();
             editing = true;
             exit = 0;
-            tooltipProvider.SetMessage("Backspace: remove bind\nEnter: finish editing");
+            tooltipProvider.SetMessage("Backspace: remove bind\n<icon>D</>: finish editing");
             owner.tooltipController.UpdateTooltip();
         }
 
@@ -43,7 +43,7 @@ namespace OriDeInputMod
                 SetKeys(currentKeys.ToArray());
                 PlayerInputRebinding.WriteKeyRebindSettings();
                 PlayerInput.Instance.RefreshControlScheme();
-                tooltipProvider.SetMessage("Click on an action to add or remove binds");
+                tooltipProvider.SetMessage("<icon>D</>: add or remove binds");
                 owner.tooltipController.UpdateTooltip();
                 return;
             }
@@ -102,7 +102,7 @@ namespace OriDeInputMod
             messageBox.SetMessage(new MessageDescriptor(KeybindControl.KeyBindingToString(getKeys())));
             CleverMenuItemTooltip component = base.GetComponent<CleverMenuItemTooltip>();
             tooltipProvider = ScriptableObject.CreateInstance<BasicMessageProvider>();
-            tooltipProvider.SetMessage("Click on an action to add or remove binds");
+            tooltipProvider.SetMessage("<icon>D</>: add or remove binds");
             component.Tooltip = tooltipProvider;
             owner.tooltipController.UpdateTooltip();
         }

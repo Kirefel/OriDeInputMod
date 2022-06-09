@@ -16,8 +16,7 @@ namespace OriDeInputMod
 
         public static void AddKeyboardControls()
         {
-            // TODO stomp keyboard binds
-            // AddKeyCodesToButtonInput(stomp??, Stomp);
+            AddKeyCodesToButtonInput(CustomKeyRebindings.KeyRebindings.Stomp, stompInput);
         }
 
         public static void AddControllerControls()
@@ -159,7 +158,3 @@ namespace OriDeInputMod
         }
     }
 }
-
-/*
-   	
-*/
