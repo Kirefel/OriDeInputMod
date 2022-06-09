@@ -14,7 +14,7 @@ namespace OriDeInputMod
         [HarmonyPostfix, HarmonyPatch(typeof(PlayerInput), nameof(PlayerInput.FixedUpdate))]
         private static void FixedUpdate() => CustomInput.FixedUpdate();
 
-        [HarmonyPrefix, HarmonyPatch(typeof(PlayerInput), nameof(PlayerInput.AddControllerControls))] // TODO replace method, include all binds
+        [HarmonyPrefix, HarmonyPatch(typeof(PlayerInput), nameof(PlayerInput.AddControllerControls))]
         private static bool AddControllerControls()
         {
             CustomInput.AddControllerControls();

@@ -9,7 +9,7 @@ namespace OriDeInputMod
     {
         private static ControllerBindingSettings controllerRebindings;
 
-        private const string ControllerInputRebindingsFileName = "ControllerRebindings2.txt";
+        private const string ControllerInputRebindingsFileName = "ControllerRebindings.txt";
         private static string ControllerRebindingFile => Path.Combine(OutputFolder.PlayerDataFolderPath, ControllerInputRebindingsFileName);
 
         public static ControllerBindingSettings ControllerRebindings
