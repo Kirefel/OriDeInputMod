@@ -17,6 +17,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Lib.Harmony" Version="2.0.2" />
-    <PackageReference Include="OriDeModLoader" Version="0.5.1-alpha" />
+    <PackageReference Include="OriDeModLoader" Version="0.6.0-alpha" />
   </ItemGroup>
 </Project>
