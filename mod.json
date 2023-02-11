@@ -1,0 +1,6 @@
+{
+    "name": "Input Mod",
+    "version": "v1.1.0",
+    "preload": [],
+    "entrypoint": [ "OriDeInputMod.dll" ]
+}
